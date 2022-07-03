@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme.copyWith(
         colorScheme: lightTheme.colorScheme.copyWith(
           primary: Colors.green,
-          secondary: Colors.green.shade100,
+          secondary: Colors.green[600],
         ),
       ),
       darkTheme: darkTheme,

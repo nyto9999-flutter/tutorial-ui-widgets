@@ -1,49 +1,43 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tutorial_ui_widgets/pages/home_page.dart';
+
+import 'home_page.dart';
 import 'indox_page.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  final List<Widget> _pages = [
-    const HomePage(),
-    const InboxPage(),
-  ];
-  int _seletedIndex = 0;
-
-  void _onTapped(int index) {
-    setState(() {
-      _seletedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          'assets/images/logo.png',
-          width: 180,
+    return Material(
+      child: CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          backgroundColor: CupertinoColors.systemGrey5,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              label: 'Home',
+              icon: Icon(CupertinoIcons.home),
+            ),
+            BottomNavigationBarItem(
+              label: 'Inbox',
+              icon: Icon(CupertinoIcons.mail),
+            ),
+          ],
         ),
-      ),
-      // ListView is Flutter fashion of Android's RecyclerView and iOS UITableView.
-      body: IndexedStack(index: _seletedIndex, children: [..._pages]),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _seletedIndex, // the the active tab
-        onTap: _onTapped,
-        items: const [
-          BottomNavigationBarItem(label: 'Home', icon: Icon(Icons.home)),
-          BottomNavigationBarItem(label: 'Inbox', icon: Icon(Icons.mail)),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        tabBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return CupertinoTabView(builder: (context) {
+                return const HomePage();
+              });
+            case 1:
+              return CupertinoTabView(builder: (context) {
+                return const InboxPage();
+              });
+            default:
+              return Container();
+          }
+        },
       ),
     );
   }

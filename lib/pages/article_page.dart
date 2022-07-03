@@ -31,7 +31,7 @@ class ArticlePage extends StatelessWidget {
               const ArticleTags(),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 16),
-                height: 16,
+                height: 600,
                 color: Colors.grey[300],
               ),
             ]),

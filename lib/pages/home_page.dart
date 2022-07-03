@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tutorial_ui_widgets/models/article.dart';
 import 'package:tutorial_ui_widgets/pages/article_page.dart';
 import 'package:tutorial_ui_widgets/repos/article_repo.dart';
 import 'package:tutorial_ui_widgets/widgets/article_card.dart';
+
+import 'create_another_article.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,41 +26,64 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // if have asyn task, always use futurebuilder instead.
-    return FutureBuilder<List<Article>>(
-        future: _futureArticles,
-        //a snapshot is just a representation of
-        //the most recent interation with their synchronous tasks.
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: articles.length,
-              itemBuilder: (BuildContext context, int index) {
-                final article = snapshot.data![index];
-                return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArticlePage(
-                            article: article,
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Image.asset(
+          'assets/images/logo_dark.png',
+          width: 180,
+        ),
+        // For only HomePage
+        trailing: IconButton(
+          icon: const Icon(CupertinoIcons.add_circled),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CreateAnotherArticle()),
+            );
+          },
+        ),
+        //end
+      ),
+      child: FutureBuilder<List<Article>>(
+          future: _futureArticles,
+          //a snapshot is just a representation of
+          //the most recent interation with their synchronous tasks.
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: articles.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final article = snapshot.data![index];
+                  return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticlePage(
+                              article: article,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: ArticleCard(article: article));
-              },
-            );
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                '${snapshot.error}',
-                style: const TextStyle(fontSize: 24),
-              ),
-            );
-          }
-          //during the network call, progress indicator is displaying.
-          return const Center(child: CircularProgressIndicator());
-        });
+                        );
+                      },
+                      child: ArticleCard(article: article));
+                },
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(fontSize: 24),
+                ),
+              );
+            }
+            //during the network call, progress indicator is displaying.
+            return const Center(
+                child: CupertinoActivityIndicator(
+              radius: 24,
+            ));
+          }),
+    );
   }
 }
